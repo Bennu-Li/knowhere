@@ -27,17 +27,23 @@ pull_request_rules:
         add:
           - dco-passed
 
+
   - name: Blocking PR if missing a related issue or PR doesn't have kind/improvement label
     conditions:
       - or:
         - base=main
         - base=support_diskann
         - base=1.x
-      - and:
-        - -body~=\#[0-9]{1,6}(\s+|$)
-        - -body~=https://github.com/zilliztech/Knowhere/issues/[0-9]{1,6}(\s+|$)
-      - -label=kind/improvement
       - -title~=\[automated\]
+      - -label=kind/improvement
+      - or:
+        - and:
+          - -body~=\#[0-9]{1,6}(\s+|$)
+          - -body~=https://github.com/zilliztech/Knowhere/issues/[0-9]{1,6}(\s+|$)
+        - and:
+          - -label=kind/enhancement
+          - -label=kind/feature
+          - -label=kind/bug
     actions:
       label:
         add:
@@ -46,6 +52,7 @@ pull_request_rules:
         message: |
           @{{author}} Please associate the related issue to the body of your Pull Request.  (eg. “issue: #<xyz>”)
 
+
   - name: Dismiss block label if related issue be added into PR
     conditions:
       - or:
@@ -53,10 +60,15 @@ pull_request_rules:
         - base=support_diskann
         - base=1.x
       - or:
-        - or:
-          - body~=\#[0-9]{1,6}(\s+|$)
-          - body~=https://github.com/zilliztech/Knowhere/issues/[0-9]{1,6}(\s+|$)
         - label=kind/improvement
+        - and:
+          - or:
+            - label=kind/enhancement
+            - label=kind/feature
+            - label=kind/bug
+          - or:
+            - body~=\#[0-9]{1,6}(\s+|$)
+            - body~=https://github.com/zilliztech/Knowhere/issues/[0-9]{1,6}(\s+|$)
     actions:
       label:
         remove:
