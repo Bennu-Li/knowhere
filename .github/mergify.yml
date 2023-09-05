@@ -163,7 +163,7 @@ pull_request_rules:
   - name: Test passed for cpu code changed only for main
     conditions:
       - base=main
-      - files~=^(?!src/index/ivf_raft/)
+      - -files~=^(?=src/index/ivf_raft/)
       - files~=^(?=.*((\.(h|cpp)|CMakeLists.txt))).*$
       - "status-success=ut on ubuntu-20.04"
       - 'status-success=pre-commit'
